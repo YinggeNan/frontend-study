@@ -1,0 +1,172 @@
+<html>
+
+<head>f-basic html test</head>
+
+<body>
+    <!-- 引入本地文件 -->
+    <script src="./jquery-3.6.0.js"></script>
+    <div id="d1">
+        <div id="d1_child">
+            <p>d1 p</p>
+            <p class="p1 p2">p1 p2</p>
+        </div>
+    </div>
+    <form id="12" test-form">
+        <input type="text" name="test">
+        <p>jquery选择器-id选择器、class选择器、标签选择器、属性选择器、组合选择器、多项选择器、层级选择器</p>
+        <button type="button" onclick="testJquery()">test jquery</button>
+        <button type="button" name="button2">test jquery button2</button>
+    </form>
+    <hr>
+    <div id="testSelectorFind">
+        <ul class="lang">
+            <li class="js dy">JavaScript</li>
+            <li class="dy">Python</li>
+            <li id="swift">Swift</li>
+            <li class="dy">Scheme</li>
+            <li name="haskell">Haskell</li>
+        </ul </div>
+        
+        <p>jquery选择器-操作和过滤</p>
+        <button onclick="testSelectorFind()">testSelectorFind</button>
+        <button onclick="testSelectorNext()">testSelectorNext</button>
+        <button onclick="testSelectorPrev()">testSelectorPrev</button>
+        <button onclick="testFilter()">testFilter</button>
+        <button onclick="testMap()">testMap</button>
+        <hr>
+        <p>jquery设置节点文本</p>
+        <button onclick="testText()">testText</button>
+        <hr>
+        <p>jquery设置节点html</p>
+        <button onclick="testHtml()">testHtml</button>
+        <hr>
+        <p>jquery设置节点css</p>
+        <button onclick="testCss()">testCss</button>
+        <hr>
+        <p>jquery显示和隐藏节点</p>
+        <button onclick="testHide()">testHide</button>
+        <button onclick="testShow()">testShow</button>
+        <hr>
+        <p>jquery显示和设置表单数据</p>
+        <input id="test-input" name="email" value="test">
+        <select id="test-select" name="city">
+            <option value="BJ" selected>Beijing</option>
+            <option value="SH">Shanghai</option>
+            <option value="SZ">Shenzhen</option>
+        </select>
+        <textarea id="test-textarea">Hello</textarea>
+        <button onclick="testFormDom()">testFormDom</button>
+        <hr>
+        <p>显示和设置div-dom信息</p>
+        <div width="500px" height="800px" style="color: rgb(67, 71, 117)"></div>
+        <button onclick="testDivDom()">testDivDom</button>
+        <hr>
+</body>
+
+</html>
+
+<script>
+    function testJquery() { 
+        // jquery对象都是数组,要得到dom对象都要get(0)
+        var pH = $('#d1 p'); // 层级选择器
+        var pH_child= $('#d1_child>p'); // 层级选择器
+        var p1p2 = $('.p1.p2'); //组合两个class选择器
+        var form12_button = $('[type=button]'); // 属性选择器
+        var form12_button2 = $('#12 [name=button2]'); //层级选择器
+        var form12_button_and_2 = $('[name=button2],[onclick="testJquery()"]'); // 多项选择器
+        alert(pH.get(0).innerText); // 获得dom节点内容
+        alert(p1p2.get(0).innerText);
+        alert(form12_button.get(0).innerText);
+        alert(form12_button2.get(0).innerText);
+        alert("2 button content");
+        alert(form12_button_and_2.get(0).innerText);
+        alert(form12_button_and_2.get(1).innerText);
+    }
+/*     jqueryObj.find('selector')：对jquery对象的所有子节点按照所给选择器进行查找，
+    返回一个jquery对象，包含符合条件的所有dom节点 */
+    function testSelectorFind() {
+        var ul = $('ul.lang'); //组合选择器：标签选择器+class选择器
+        var dyClass = ul.find('.dy');
+        var swiftId = ul.find('#swift');
+        var haskellName = ul.find('[name=haskell]');
+        alert("dyClass:");
+        for (let classItem of dyClass) {
+            alert(classItem.innerText);
+        }
+        alert("swiftId:" + swiftId.get(0).innerText);
+        alert("haskellName:" + haskellName.get(0).innerText);
+    }
+    // 
+    function testSelectorNext() {
+        alert("javaScriptNode:" + javaScriptNode.get(0).innerText);
+        let pythonNode = javaScriptNode.next();
+        alert(pythonNode.get(0).innerText);
+
+    }
+    function testSelectorPrev() {
+        var pythonNode = $('ul.lang li:nth-child(2)');
+        alert("pythonNode:" + pythonNode.get(0).innerText);
+        alert("pythonNode prev:" + pythonNode.prev().get(0).innerText);
+    }
+    function testFilter() {
+        var ulLi = $('ul.lang li');
+        var dyClass = ulLi.filter('.dy');
+        alert("dyClass length:" + dyClass.length);
+        for (let dyItem of dyClass) {
+            alert(dyItem.innerText);
+        }
+    }
+    function testMap() {
+        var ulLi = $('ul.lang li');
+        alert("ulLi:" + ulLi.text());
+        var dyClass = ulLi.map(function () {
+            return this.innerText;
+        });
+        for (let dyClassItem of dyClass) {
+            alert(dyClassItem);
+        }
+    }
+    function testText() {
+        var ulLi = $('ul.lang li');
+        ulLi.text("all text");
+    }
+    function testHtml() {
+        var ul = $('ul.lang li');
+        ul.html('<li>ul.html</li>')
+    }
+    function testCss() {
+        var ul = $('ul.lang li');
+        ul.css('color', "red");
+    }
+    function testHide() {
+        var ul = $('ul.lang li');
+        ul.hide();
+    }
+    function testShow() {
+        var ul = $('ul.lang li');
+        ul.show();
+    }
+    function testWinodowDom() {
+        alert("window 窗口 width:"+$(window).width());
+        alert("window 窗口 height:"+$(window).height());
+    }
+    function testDocumentDom() {
+        alert("document 窗口 width:"+$(document).width());
+        alert("document 窗口 height:"+$(document).height());
+    }
+    function testDivDom() {
+        var divDom = $('')
+        alert("div width:"+$(document).width());
+        alert("div height:"+$(document).height());
+        alert("设置div height");
+        alert("设置div weight");
+    }
+    function testFormDom() {
+        var
+            input = $('#test-input');
+        var readyContent = "sky";
+        alert("显示id=test-input的内容:"+input.val());
+        alert("设置id=test-input的内容为:"+readyContent);
+        input.val(readyContent);
+    }
+</script>

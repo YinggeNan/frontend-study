@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>复习Object.defineProperty()</title>
+    <script src="../../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <!-- <h1>测试, {{name}}</h1>
+        <h1>测试, {{$options}}</h1>
+        <h1>测试, {{$emit}}</h1> -->
+    </div>
+</body>
+<script type="text/javascript">
+    // Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    // var app = new Vue({
+    //     el: "#root",
+    //     data: {
+    //         name: "sangguigu"
+    //     }
+    // });
+    let person = {
+        name: "a"
+    }
+    let number =18;
+    Object.defineProperty(person, "age", {
+        // value: 42,
+        // writable: true, //控制属性是否被修改,默认false
+        // enumerable:true, //控制属性是否可被枚举,默认false
+        // configurable: true //控制属性是否可被删除,默认false
+        // 当读取person的age属性时,get函数(getter)就会被调用,且返回值是age的值
+        // 可以写成get(){}
+        get:function(){
+            return number;
+        },
+        // 修改person属性时，set函数会被调用，且会受到具体的修改值，以参数形式传入该函数
+        set(value){
+            console.log("修改值:"+value);
+        }
+    });
+    console.log("person:" + Object.keys(person));
+    for(var item in person){
+        console.log("@"+item);
+    }
+</script>
+
+</html>

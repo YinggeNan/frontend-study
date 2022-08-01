@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue 事件基本使用</title>
+    <script src="../../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <h1>welcome</h1>
+        <!--默认传参数event-->
+        <button v-on:click="showInfo">点我提示信息</button>
+        <!--v-on:可以简写为@click-->
+        <button @click="showInfo">点我提示信息</button>
+        <!--这样传参数,默认event事件参数就丢了-->
+        <button @click="showInfo2(66)">点我提示信息，传参数,click需要加括号</button>
+        <!-- 传数字参数,并且带上event事件-->
+        <button @click="showInfo3(66, $event)">点我提示信息，传数字参数+事件参数</button>
+        <!--参数顺序由自己定义-->
+        <button @click="showInfo4($event,66)">点我提示信息，传事件参数+数字参数</button>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    var vm = new Vue({
+        el: "#root",
+        data: {
+            name: "sangguigu"
+        },
+        methods:{
+            // 所有被vue管理的函数都写成普通函数,不要写成箭头函数
+            showInfo(event){
+                alert("同学你好");
+                // console.log(event.target.innerText);
+                // console.log(this);
+                // 此处this为vue实例，如果用箭头函数定义，this就是window对象
+                
+            },
+            showInfo2(number){
+                alert("number:"+number);
+            },
+            showInfo3(number,event){
+                alert("number:"+number+" event:"+event.target.innerText);
+            },
+            showInfo4(event,number){
+                alert("event:"+event.target.innerText+" number:"+number);
+            }
+        }
+    });
+</script>
+
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue 键盘事件</title>
+    <script src="../../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <h1>welcome</h1>
+        <p>按下回车就提示输入，代码判定回车</p>
+        <input type="text" placeholder="按下回车触发回调" @keydown="keydownTrigger">
+        <p>按下回车就提示输入,vue修饰符判定回车</p>
+        <input type="text" placeholder="按下回车触发回调" @keydown.enter="keydownTrigger1">
+        <p>松开键盘就提示输入</p>
+        <input type="text" placeholder="松开回车触发回调" @keyup="keyupTrigger">
+        <p>松开键盘就提示输入,vue修饰符判定回车</p>
+        <input type="text" placeholder="松开回车触发回调" @keyup.enter="keyupTrigger">
+        <p>按下delete触发回调,vue修饰符判定回车</p>
+        <input type="text" placeholder="松开回车触发回调" @keyup.delete="deleteTrigger">
+        <p>按下切换大小写触发回调,vue修饰符判定回车</p>
+        <input type="text" placeholder="松开回车触发回调" @keyup.Caps-Lock="capsLockTrigger">
+
+        <p>按下ctrl绑定keyup时需要按下其他按键再松开其他按键时触发回调,vue修饰符判定回车</p>
+        <input type="text" placeholder="松开回车触发回调" @keyup.ctrl="ctrlTrigger">
+        <p>按下ctrl+y时才触发,vue修饰符判定回车</p>
+        <input type="text" placeholder="松开回车触发回调" @keyup.ctrl.y="ctrlYTrigger">
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    var vm = new Vue({
+        el: "#root",
+        data: {
+            name: "sangguigu"
+        },
+        methods: {
+            // 所有被vue管理的函数都写成普通函数,不要写成箭头函数
+            keydownTrigger(event) {
+                // 按下回车输出
+                if (event.keyCode === 13) {
+                    // event.target.valu是输入框内容
+                    console.log(event.target.value);
+                }
+
+            },
+            keydownTrigger1(event) {
+                // event.target.valu是输入框内容
+                console.log(event.target.value);
+            },
+            keyupTrigger(event) {
+                // 松开回车输出
+                if (event.keyCode === 13) {
+                    console.log(event.target.value);
+                }
+            },
+            keyupTrigger1(event) {
+                console.log(event.target.value);
+            },
+            deleteTrigger(event) {
+                console.log(event.target.value);
+                // event.key按键名字, event.keyCod按键编码 
+                console.log(event.key, event.keyCode);
+            },
+            capsLockTrigger(event) {
+                console.log(event.target.value);
+                // event.key按键名字, event.keyCod按键编码 
+                console.log(event.key, event.keyCode);
+            },
+            ctrlTrigger(event) {
+                console.log(event.target.value);
+                // event.key按键名字, event.keyCod按键编码 
+                console.log(event.key, event.keyCode);
+            },
+            tabTrigger(event) {
+                console.log(event.target.value);
+                // event.key按键名字, event.keyCod按键编码 
+                console.log(event.key, event.keyCode);
+            },
+            ctrlYTrigger(event) {
+                console.log(event.target.value);
+                // event.key按键名字, event.keyCod按键编码 
+                console.log(event.key, event.keyCode);
+            }
+        }
+    });
+</script>
+
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue 监视属性-深度监视</title>
+    <script src="../../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <h2>今天天气很{{info}}</h2>
+        <button @click="changeWeather">切换天气</button>
+        <button @click="isHot = !isHot">切换天气,click调用函数体直接在调用处</button>
+        <hr />
+        <h3>a的值是:{{numbers.a}}</h3>
+        <button @click="numbers.a++">点我让a变化</button>
+        <button @click="numbers.b++">点我让b变化</button>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    var vm = new Vue({
+        el: "#root",
+        data: {
+            isHot: true,
+            numbers: {
+                a: 1,
+                b: 1
+            }
+        },
+        computed: {
+            info: {
+                get() {
+                    return this.isHot ? '炎热' : '凉爽';
+                }
+            }
+        },
+        methods: {
+            changeWeather() {
+                this.isHot = !this.isHot;
+            }
+        },
+        watch: {
+            isHot: {
+                immediate: true, // 初始化时让handler调用一下
+                // handler什么时候调用?当isHot发生改变时
+                handler(newValue, oldValue) {
+                    console.log('isHot被修改了');
+                }
+            },
+            // 监视多级解构中某个属性的变化
+            'numbers.a': {
+                handler(newVal, oldVal) {
+                    console.log("newVal:" + newVal + " oldVal:" + oldVal);
+                }
+            },
+            // 监视整个对象中任意一个属性的变化
+            // 错误写法,对象变量的值只是一个堆对象的引用地址，对象内属性的变化不会修改这个引用地址的值,除非直接替换这个对象,则引用地址会变化
+            // numbers:{
+            //     handler(newVal, oldVal){
+            //         console.log("newVal:"+newVal +" oldVal:"+oldVal);
+            //     }
+            // }
+            // 正确写法
+            numbers: {
+                deep: true, //深度监视
+                handler(newVal, oldVal) {
+                    console.log("a或b的值改变了");
+                }
+            }
+        }
+    });
+    // vm.$watch('isHot', {
+    //     immediate: true, // 初始化时让handler调用一下
+    //     // handler什么时候调用?当isHot发生改变时
+    //     handler(newValue, oldValue) {
+    //         console.log('isHot被修改了');
+    //     }
+    // });
+</script>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue el和data的两种写法</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h1>nihao, {{name}}</h1>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    // el的两种写法
+    var app = new Vue({
+        // el写法1
+        // el: '#root',
+        data: { 
+            name:"sangguigu"
+        }
+    });
+    // el写法2
+    setTimeout(()=>{
+        app.$mount('#root')
+    }, 1000);
+    // data的两种写法：对象式、函数式
+    var app2 = new Vue({
+        el: '#root',
+        // data的函数必须返回一个对象,data函数不能用箭头函数
+        data: function(){
+            return {
+                name:"sangguigu"
+            }
+        }
+    });
+</script>
+</html>

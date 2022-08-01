@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue methods实现</title>
+    <script src="../../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        姓: <input type="text" v-model:value="lastName"><br/>
+        名: <input type="text" v-model:value="firstName"><br/>
+        <!--methods是函数调用,data属性中的值发生改变,vue就需要重新解析模板,插值语法每次都会调用,所以下面会被调用4次-->
+        姓名(姓只要前三个字符): <span >{{fullName()}}</span><br>
+        姓名(姓只要前三个字符): <span >{{fullName()}}</span><br>
+        姓名(姓只要前三个字符): <span >{{fullName()}}</span><br>
+        姓名(姓只要前三个字符): <span >{{fullName()}}</span><br>
+
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    // vue中计算属性的"属性"指的是data块中的key名
+    // 计算属性的含义是用已有的属性去组合计算得到新的属性
+    var vm = new Vue({
+        el: "#root",
+        data: {
+            firstName:'三',
+            lastName:'张'
+        },
+        methods: {
+            fullName(){
+                console.log("@")
+                return this.firstName+''+this.lastName;
+            }
+        }
+    });
+</script>
+
+</html>

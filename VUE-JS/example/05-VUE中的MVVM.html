@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue MVVM</title>
+    <script src="../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <h1>测试, {{name}}</h1>
+        <h1>测试, {{$options}}</h1>
+        <h1>测试, {{$emit}}</h1>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    var app = new Vue({
+        el: "#root",
+        data: {
+            name: "sangguigu"
+        }
+    });
+</script>
+
+</html>

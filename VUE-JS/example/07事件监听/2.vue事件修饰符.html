@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue 事件修饰符</title>
+    <script src="../../js/vue.js"></script>
+    <style>
+        * {
+            margin-top: 20px;
+        }
+
+        .demo1 {
+            height: 50px;
+            background-color: skyblue;
+        }
+
+        .box1 {
+            padding: 5px;
+            background-color: skyblue;
+        }
+
+        .box2 {
+            padding: 5px;
+            background-color: orange;
+        }
+
+        .list {
+            width: 200px;
+            height: 200px;
+            background-color: peru;
+            overflow: auto;
+        }
+
+        li {
+            height: 1000px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <h1>welcome</h1>
+        <!--阻止默认事件-->
+        <a href="http://www.baidu.com" @click.prevent="showInfo">点我提示信息</a>
+        <!--事件冒泡行为,button在div里面,点击了button会触发div的click事件,stop可以阻止冒泡行为-->
+        <div class="demo1" @click="showInfo">
+            <!--阻止事件冒泡-->
+            <button @click.stop="showInfo">点我提示信息</button>
+        </div>
+        <!--事件只触发一次-->
+        <button @click.once="showInfo">点我提示信息,事件只触发一次</button>
+        <!--事件捕获:外层div到内层div,事件冒泡,内层div到外层div,默认冒泡阶段才开始处理事件,所以输出2,1,内部到外层-->
+        <!--使用事件的捕获模式,则在捕获阶段就开始处理事件,1,2,外层到内层-->
+        <div class="box1" @click.capture="showMsg(1)">
+            div1
+            <div class="box2" @click="showMsg(2)">div2</div>
+        </div>
+
+        <!--只有event.target是当前操作的元素时才触发事件-->
+        <div class="demo1" @click.self="showInfo">
+            <!--外层div使用了self之后,点击button的click,则不会触发div点击事件-->
+            <button @click="showInfo">点我提示信息,self</button>
+        </div>
+
+        <!--6.passive:事件的默认形式立即执行,无需等待事件回调执行完毕-->
+        <!--两个滚动:滚动条滚动scroll(滚动条可以被滚轮驱动),鼠标滚动wheel-->
+        <ul @scroll="demo" class="list">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+
+        <ul @wheel="demo" class="list">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+        <p>滚动时,先执行触发函数,然后滚动滚轮,因为函数耗时较长,所以有延时效果</p>
+        <!--滚动时,先执行触发函数,然后滚动滚轮,因为函数耗时较长,所以有延时效果-->
+        <ul @scroll="demoTriggerBeforeLongTime" class="list">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+
+        <p>测试passive,passive:事件的默认形式立即执行,无需等待事件回调执行完毕,去掉延时效果</p>
+        <!--滚动时,先执行触发函数,然后滚动滚轮,因为函数耗时较长,所以有延时效果-->
+        <ul @scroll.passive="demoTriggerBeforeLongTime" class="list">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+        <p>连着用两个事件修饰符,阻止冒泡,并阻止事件默认行为</p>
+        <div class="demo1" @click="showInfo">
+            <!--阻止事件冒泡-->
+            <a href="http://www.baidu.com" @click.stop.prevent="showInfo">点我提示信息</button>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    var vm = new Vue({
+        el: "#root",
+        data: {
+            name: "sangguigu"
+        },
+        methods: {
+            // 所有被vue管理的函数都写成普通函数,不要写成箭头函数
+            showInfo(event) {
+                // event.stopPropagation(); //阻止事件冒泡
+                alert("同学你好");
+                // console.log(event.target.innerText);
+                // console.log(this);
+            },
+            showMsg(msg) {
+                console.log(msg);
+            },
+            demo(msg) {
+                console.log("@");
+            },
+            demoTriggerBeforeLongTime(msg) {
+                for(let i=0;i<100000;i++){
+                    console.log("#");
+                }
+                console.log("累坏了");
+                console.log("@");
+            }
+        }
+    });
+</script>
+
+</html>

@@ -485,3 +485,10 @@ computd和watch之间的区别:
 为了将一组html标签进行条件选择
 1.可以用一个div包裹起来,但是这样破坏了原有的结构
 2.用template来包裹起来,只能配合v-if使用,不能和v-show使用,渲染的时候template会扔掉
+
+#### 12.vue v-for
+1.用于展示列表数据
+2.语法: v-for="(item,value) in xxx", :key=yyy"
+3.可遍历: 数组、对象、字符串(用得很少)、指定次数(用得很少)
+
+#### 13.vue key

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue 条件渲染</title>
+    <script src="../../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <!--使用v-show做条件渲染-->
+        <h2 v-show="false">welcome false</h2>
+        <h2 v-show="true">welcome true</h2>
+        <h3> 当前的n值是:{{n}}</h2>
+
+            <button @click="n++">点我n+1</button>
+            <!--使用v-if条件渲染,是多组判断-->
+            <div v-if="n%3 ===1">Angular</div>
+            <div v-if="n%3 ===2">React</div>
+            <div v-if="n%3 ===3">Vue</div>
+
+            <!--使用v-else-if条件渲染,v-if或v-else-if判断成功就不会继续往下走了,是一组判断-->
+            <!--v-if,v-else-if,v-else写的话,-->
+            <button @click="m++">点我m+1</button>
+            <div v-if="m ===1">Angular</div>
+            <div v-else-if="m ===2">React</div>
+            <div v-else-if="m ===3">Vue</div>
+            <div v-else>Other Language</div>
+            
+            <!--template渲染时不对dom结构产生影响,只能和template配合使用-->
+            <template v-if="n === 1">
+                <h2>你好</h2>
+                <h2>尚硅谷</h2>
+                <h2>北京</h2>
+            </template>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    var vm = new Vue({
+        el: "#root",
+        data: {
+            name: "sangguigu",
+            n: 10,
+            m:0,
+        },
+    });
+</script>
+
+</html>

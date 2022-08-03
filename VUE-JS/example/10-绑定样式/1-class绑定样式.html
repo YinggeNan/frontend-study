@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue class绑定样式</title>
+    <script src="../../js/vue.js"></script>
+    <style>
+        .basic{
+            width: 400px;
+            height:100px;
+            border: 1px solid black;
+            
+        }
+        .happy{
+            background-color: red;
+        }
+        .sad{
+            background-color: green;
+        }
+        .normal{
+            background-color: antiquewhite;
+        }
+        .atguigu1{
+            border-radius: dotted;
+        }
+        .atgugigu2{
+            border-color: yellow;
+        }
+        .atgugigu3{
+            border-width: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <!--绑定class样式--字符串写法，适用于：样式的类名不确定，需要动态指定-->
+        <div class="basic" :class="mood" @click="changeMood1">绑定class样式--字符串写法</div>
+
+        <!--绑定class样式--数组写法，适用于：要绑定的样式个数不确定，名字不确定-->
+        <!-- 如果绑定数组直接写成[a,b],则a、b是data管理的变量 -->
+        <!-- ['a','b']的话，则'a'、'b'是class属性 -->
+        <div class="basic" :class="arr">绑定class样式--数组写法</div>
+
+        <!--绑定class样式--对象写法，适用于：要绑定的样式个数确定，名字确定，但是要动态决定-->
+        <!-- 如果绑定对象直接写成
+        {
+            aiguigu1:a,
+            aiguigu2:b,
+        }的话，则a、b都是data管理的变量 -->
+        <div class="basic" :class="classObj">绑定class样式--对象写法</div>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    var vm = new Vue({
+        el: "#root",
+        data: {
+            name:"sangguigu",
+            mood:'normal',
+            arr:['atguigu1','atguigu2','atguigu3'],
+            classObj:{
+                aiguigu1:false,
+                aiguigu2:true,
+                aiguigu3:false,
+            }
+        },
+        methods:{
+            changeMood(){
+                this.a = 'happy';
+            },
+            changeMood1(){
+                console.log("changMood1");
+                const arr = ['happy','sad','normal'];
+                const index = Math.floor(Math.random()*3);
+                console.log("index:"+index);
+                this.mood= arr[index];
+            },
+            changeMood2(){
+
+            }
+        }
+    });
+</script>
+
+</html>

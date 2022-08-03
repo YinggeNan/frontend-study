@@ -385,3 +385,97 @@ computd和watch之间的区别:
 两个重要的小原则:
 1.所有被vue管理的函数，要写成普通函数，这样this指向的才是vm或组件实例对象
 2.所有不被vue管理的函数(定时器回调，ajax回调函数,promise的回调函数等)，写成箭头函数，这样this的回调才是vm或组件实例对象
+
+#### 10.vue绑定样式
+##### 1.class
+```
+//vue部分
+        data: {
+            mood:'normal',
+            arr:['atguigu1','atguigu2','atguigu3'],
+            classObj:{
+                aiguigu1:false,
+                aiguigu2:true,
+                aiguigu3:false,
+            }
+        },
+```
+
+###### 字符串写法：
+```
+// html部分
+<div class="basic" :class="mood" @click="changeMood1">绑定class样式--字符串写法</div>
+
+```
+###### 数组写法：
+```
+// html部分
+<div class="basic" :class="arr">绑定class样式--数组写法</div>
+```
+###### 对象写法：
+```
+// html部分
+<div class="basic" :class="classObj">绑定class样式--对象写法</div>
+```
+
+##### 2.style
+```
+// vue部分
+            styleObj: {
+                fontSize: '40px',
+                color: 'red',
+            },
+            styleObj1: {
+                fontSize: '30px',
+                color: 'green',
+            },
+            styleObj2: {
+                backgroundColor: 'gray'
+            },
+```
+
+###### 数组写法：
+```
+// html部分
+        <div class="basic" :style="[styleObj1, styleObj2]">绑定style,数组写法</div>
+
+```
+
+###### 对象写法：
+```
+// html部分
+ <div class="basic" :style="styleObj">绑定style,对象写法</div>
+
+```
+
+【Tip】
+不变的css部分可以直接用class写死，变化的用vue的:class绑定变量，按照：只有class名字变化、class数量也变化，class有预定义但是要选择显示来使用 "字符串、数组、对象"显示
+
+【注意】
+不能在data中的一个元素中引用其他元素,只能在methods、computed、watch中引用，或者直接在调用处引用
+错误示例:
+```
+        data: {
+            styleObj1: {
+                fontSize: '30px',
+                color: 'green',
+            },
+            styleObj2: {
+                backgroundColor: 'gray'
+            },
+            styleArr:[ this.styleObj1, this.styleObj2] // 此处写法错误
+            styleArr:[
+                styleObj1: {
+                    fontSize: '30px',
+                    color: 'green',
+                },
+                styleObj2: {
+                    backgroundColor: 'gray'
+                }
+            ]
+        },
+```
+正确示例
+```
+<div class="basic" :style="[styleObj1, styleObj2]">绑定style,数组写法</div>
+```

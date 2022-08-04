@@ -486,9 +486,37 @@ computd和watch之间的区别:
 1.可以用一个div包裹起来,但是这样破坏了原有的结构
 2.用template来包裹起来,只能配合v-if使用,不能和v-show使用,渲染的时候template会扔掉
 
-#### 12.vue v-for
+#### 11.2 vue v-for
 1.用于展示列表数据
 2.语法: v-for="(item,value) in xxx", :key=yyy"
 3.可遍历: 数组、对象、字符串(用得很少)、指定次数(用得很少)
 
-#### 13.vue key
+#### 11.3 vue key原理
+vue渲染原理：
+vue data->虚拟 dom->真实dom
+用户的输入都是真实dom
+dom diff算法:
+vue的dom diff只在虚拟dom中进行,根据key,对相同key的dom进行diff比较,不一样的部分就重新渲染成真实dom,一样的部分就复用真实dom(一个相同key中可能有多个dom),新key的dom直接重新渲染
+
+![遍历时key的作用](../pic/../VUE-JS/pic/vue-v-for-key-meaning1.jpg)
+![遍历时key的作用](../pic/../VUE-JS/pic/vue-v-for-key-meaning2.jpg)
+所以使用index作为key时，新增元素时,不用使用已经使用的index,最好数据对应唯一的key
+
+面试题:react,vue中的key的作用?
+1.虚拟dom key的作用:
+key时虚拟dom对象的标识,当数据发生变化时,Vue会根据【新数据】生成新的虚拟dom,
+随后vue进行【新虚拟DOM】与【旧虚拟DOM】的差异比较
+2.对比规则
+(1)旧虚拟dom中找到了与新虚拟DOM相同的key
+旧虚拟dom中内容没变,直接使用之前的真实dom
+虚拟dom中内容变了,则生成新的真实dom,随后替换掉页面中之前的真实dom
+(2)旧虚拟dom中未找到与新虚拟dom相同的key
+创建新的真实dom,随后渲染到页面
+3.用index作为key可能会引发的问题
+    1.若对数据逆序添加、逆序删除等破坏顺序操作：会产生没有必要的真实dom更新==>界面效果没问题,但是效率低
+    2.如果结构中还包含输入类的dom:会产生错误dom更新==>界面有问题
+4.开发中如何选择key?
+1.最好使用每条数据唯一标识作为key,比如id、手机号、身份证号、学号等唯一值
+2.如果不存在对数据逆序添加、逆序删除等破坏顺序问题，仅用于渲染列表展示,可以使用index作为key
+
+#### 11.4 vue 列表过滤

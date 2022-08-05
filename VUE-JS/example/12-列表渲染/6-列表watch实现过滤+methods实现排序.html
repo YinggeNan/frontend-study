@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue 列表watch实现过滤+methods实现排序</title>
+    <script src="../../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <h2>人员列表</h2>
+        <!--每次输入不同的字符串的时候都要到数据中去搜索匹配,不是一次性的,所以要做成计算属性或watch--->
+        输入搜索字符串:<input type="text" placeholder="请输入名字" v-model:value="searchStr">
+        <!--三个按钮,都是对同一堆数据排序,不需要创建三个函数,一个函数即可,不同按钮传入不同排序参数即可-->
+        <button @click="sortByAge(1)">年龄升序</button>
+        <button @click="sortByAge(2)">年龄降序</button>
+        <ul>
+            <li v-for="(p,index) of personsSelect" :key="index">
+                {{p.name}}-{{p.age}}-{{p.sex}}
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    var vm = new Vue({
+        el: "#root",
+        data: {
+            persons: [
+                { id: '001', name: '马冬梅', age: 19, sex: 'female' },
+                { id: '002', name: '周冬雨', age: 20, sex: 'female' },
+                { id: '003', name: '周杰伦', age: 21, sex: 'male' },
+                { id: '004', name: '温兆伦', age: 32, sex: 'male' },
+            ],
+            searchStr: '',
+            personsSelect: [],
+        },
+        methods: {
+            sortByAge(type) {
+                console.log("type=" + type);
+                // if (type === 1) {
+                //     this.personsSelect = this.personsSelect.sort((o1, o2) => {
+                //         if (o1.age < o2.age) {
+                //             return -1;
+                //         } else if (o1.age > o2.age) {
+                //             return 1;
+                //         }
+                //         return 0;
+                //     });
+                // } else{
+                //     console.log("降序处理");
+                //     console.log("personsSelect.length=" + this.personsSelect.length);
+                //     this.personsSelect = this.personsSelect.sort((o1, o2) => {
+                //         if (o1.age < o2.age) {
+                //             return 1;
+                //         } else if (o1.age > o2.age) {
+                //             return -1;
+                //         }
+                //         return 0;
+                //     });
+                // }
+                this.personsSelect = this.personsSelect.sort((o1,o2)=>{
+                    return type===1?(o1.age-o2.age):(o2.age-o1.age);
+                });
+            },
+        },
+        watch: {
+            searchStr: {
+                immediate: true, //立即执行一次
+                handler(newVal, oldValue) {
+                    console.log("newVal=" + newVal + "oldValue=" + oldValue);
+                    this.personsSelect = this.persons.filter(item => {
+                        if (item.name.search(this.searchStr) != -1 || item.sex.search(this.searchStr) != -1) {
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+            }
+
+        }
+    });
+</script>
+
+</html>

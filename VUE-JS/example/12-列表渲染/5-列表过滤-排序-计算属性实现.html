@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vue 计算属性实现过滤+排序</title>
+    <script src="../../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <h2>人员列表</h2>
+        <!--排序是对过滤后的结果进行排序-->
+        <input type="text" placeholder="请输入名字" v-model:value="searchStr">
+        <!--三个按钮,都是对同一堆数据排序,不需要创建三个函数,一个函数即可,不同按钮传入不同排序参数即可-->
+        <button @click="sortType = 1">年龄升序</button>
+        <button @click="sortType = 2">年龄降序</button>
+        <ul>
+            <li v-for="(p,index) of personsSelect" :key="index">
+                {{p.name}}-{{p.age}}-{{p.sex}}
+            </li>
+        </ul>
+
+
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+    var vm = new Vue({
+        el: "#root",
+        data: {
+            persons: [
+                { id: '001', name: '马冬梅', age: 19,sex:'female' },
+                { id: '002', name: '周冬雨', age: 20,sex:'female' },
+                { id: '003', name: '周杰伦', age: 21,sex:'male' },
+                { id: '004', name: '温兆伦', age: 32,sex:'male' },
+            ],
+            searchStr:'',
+            sortType:1,
+        },
+        computed:{
+            personsSelect(){
+                const arr =this.persons.filter(item=>{
+                    if(item.name.search(this.searchStr)!=-1 || item.sex.search(this.searchStr)!=-1){
+                        return true;
+                    }
+                    return false;
+                });
+                return arr.sort((o1,o2)=>{
+                    return this.sortType===1?(o1.age-o2.age):(o2.age-o1.age);
+                });
+            },
+        },
+    });
+</script>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>模拟一个数据监测</title>
+    <script src="../../js/vue.js"></script>
+</head>
+
+<body>
+</body>
+<script type="text/javascript">
+    let data = {
+        name:'桑硅谷',
+        address:'北京',
+    };
+    // let tmp = '上硅谷';
+    // setInterval按照指定周期(毫秒)调用
+    // setInterval(()=>{
+    //     if(data.name!=tmp){
+    //         tmp = data.name;
+    //         console.log('name被改了');
+    //     }
+    // },1000);
+
+    // 创建一个监视的实例对象,用于监视data中属性的变化
+    const obs = new Observer(data);
+    console.log(obs);
+
+    //准备一个vm实例对象
+    let vm = {};
+    vm._data = data = obs;
+    
+    // 一层对象的监控,vue对对象的监控是递归地,一直向下寻找.
+    function Observer(obj){
+        // 汇总对象中的所有属性
+        const keys = Object.keys(obj);
+        // 遍历
+        // this代表构造函数要创建的这个对象,所以下面是在给代理对象增加属性
+        keys.forEach((k)=>{
+            Object.defineProperty(this,k,{
+                get(){
+                    return obj[k];
+                },
+                // 数据监控其实就是数据代理+在修改的时候执行自定义监测动作
+                set(val){
+                    console.log(`${k}被改了,我要去解析模板,生成虚拟DOM,进行比较`);
+                    obj[k] = val;
+                }
+            });
+        });
+    }
+</script>
+
+</html>

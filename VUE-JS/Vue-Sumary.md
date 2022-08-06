@@ -142,7 +142,7 @@ vm.name<=>data.name
 访问vm.name时->getter->获取data.name
 设置vm.name时->setter->设置data.name
 验证getter线：console.log(vm.name)发现值是data.name值"sangguigu"
-验证getter线: vm.name = "123",发现页面和data.name绑定的dom内容变成了123,检查vm._data.name属性值是否为'123',无vm.data属性
+验证setter线: vm.name = "123",发现页面和data.name绑定的dom内容变成了123,检查vm._data.name属性值是否为'123',无vm.data属性
 ![VUE-MVVM](../VUE-JS/pic/vue-data-proxy-schematic.jpg)
 vm.data被vm._data数据劫持了
 
@@ -519,5 +519,102 @@ key时虚拟dom对象的标识,当数据发生变化时,Vue会根据【新数据
 1.最好使用每条数据唯一标识作为key,比如id、手机号、身份证号、学号等唯一值
 2.如果不存在对数据逆序添加、逆序删除等破坏顺序问题，仅用于渲染列表展示,可以使用index作为key
 
-#### 11.4 vue 列表过滤
-模糊搜索
+#### 11.4 vue 列表过滤、排序
+
+
+#### 11.5 vue数据监测
+0.sample observer code:
+```
+    // 创建一个监视的实例对象,用于监视data中属性的变化
+    const obs = new Observer(data);
+    //准备一个vm实例对象
+    let vm = {};
+    vm._data = data = obs;
+    
+    // 一层对象的监控,vue对对象的监控是递归地,一直向下寻找.
+    function Observer(obj){
+        // 汇总对象中的所有属性
+        const keys = Object.keys(obj);
+        // 遍历
+        // this代表构造函数要创建的这个对象,所以下面是在给代理对象增加属性
+        keys.forEach((k)=>{
+            Object.defineProperty(this,k,{
+                get(){
+                    return obj[k];
+                },
+                // 数据监控其实就是数据代理+在修改的时候执行自定义监测动作
+                set(val){
+                    console.log(`${k}被改了,我要去解析模板,生成虚拟DOM,进行比较`);
+                    obj[k] = val;
+                }
+            });
+        });
+```
+
+1.监听的原理:data数据包装加上响应式属性->_data->vm代理 _data
+2.vue页面初始化后,为一个对象增加响应式属性:
+注意不能直接对vue实例或vue实例的根数据对象_data添加属性
+```
+Vue.set(this._data.<obj>,'<attr>','<value>');
+// 例子
+Vue.set(vm._data.student,'sex','女');
+vm.$set(vm._data.student,'sex','女');
+```
+直接在vm或者_data都不是响应式的,无法有效页面渲染
+```
+// 错误
+vm.<attr> = '<val'>;
+vm._data.<attr> = '<val'>;
+```
+3.监视数组
+调用数组的push,pop,shift,unshift,splice,sort,reverse会重新渲染
+但是如果要针对index来修改数据必须用下面的形式才能被vue监测到
+
+原理是vue对自己管理的数组使用的这些方法进行了包装，调用时会重新渲染页面,验证:
+// hobby数组
+vm._data.student.hobby.push === Array.prototype.push // fasle
+```
+        // data
+        data: {
+            name:"上硅谷",
+            address:"北京",
+            student:{
+                name: 'Tom',
+                age:{
+                    realAge:40,
+                    revealAge:29,
+                },
+                friends:[
+                    {name:'Jerry',age:'20'},
+                    {name:'Tony',age:'33'},
+                ]
+            },
+        },
+
+        // 响应式的修改数组
+        Vue.set(this.student.friends, 0, {name:'cbf',age:20});
+```
+注意因为数据代理的存在,操作vm.<attr>和操作vm._data.<attr>是一样的
+参考:https://blog.csdn.net/Laollaoaolao/article/details/119878648
+
+#### 11.6 vue数据原理总结
+1.vue会监视data中所有层次的数据
+
+2.如何监测对象中的数据？
+​ 通过setter事件监视，且要在newVue时就传入要监测的数据
+​ (1).在对象后追加的属性，Vue默认不做响应式处理
+​ (2).如需给后添加的属性做响应式，需要使用以下API:
+​ Vue.set(target,propertyName/index,value)
+​ vm.$ser(target,propertyName/index,value)
+
+3.如何监测数组中的数据?
+​ 通过包裹数组更新元素的方法实现，本质就是做了两件事:
+​ (1).调用原生对应的方法对数组进行更新
+​ (2).重新解析模板，进而更新页面
+
+4.在Vue修改数组中的某个元素需要用到以下方法:
+​ 1.使用这些API:push(),pop(),shift(),unshift(),splice(),sort(),erverse()
+​ 2.Vue.set()或vm.$set
+
+
+数据劫持:vue里的data->_data,将data中所有属性都加上了getter、setter
